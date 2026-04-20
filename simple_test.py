@@ -1,39 +1,13 @@
-from appium.webdriver.common.appiumby import AppiumBy
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
+from pages.main_page import MainPage
 
 
 def test_wiki_search(appium_driver) -> None:
-    wait = WebDriverWait(appium_driver, 10)
+    main_page = MainPage(appium_driver)
 
-    skip_button = wait.until(
-        EC.element_to_be_clickable(
-            (AppiumBy.ID, "org.wikipedia:id/fragment_onboarding_skip_button")
-        )
-    )
-    skip_button.click()
+    main_page.click_button(main_page.skip_button)
 
-    search_container = wait.until(
-        EC.element_to_be_clickable((AppiumBy.ID, "org.wikipedia:id/search_container"))
-    )
-    search_container.click()
+    main_page.click_button(main_page.search_container)
 
-    search_input = wait.until(
-        EC.visibility_of_element_located(
-            (AppiumBy.ID, "org.wikipedia:id/search_src_text")
-        )
-    )
-    search_input.send_keys("Lucas")
+    main_page.fill_input(main_page.search_input, "Lucas")
 
-    search_results = wait.until(
-        EC.visibility_of_element_located(
-            (AppiumBy.ID, "org.wikipedia:id/fragment_search_results")
-        )
-    )
-
-    result_elements = search_results.find_elements(
-        AppiumBy.CLASS_NAME, "android.widget.TextView"
-    )
-
-    for element in result_elements:
-        print(f"TEXT: {element.text.strip()}")
+    main_page.print_results()
