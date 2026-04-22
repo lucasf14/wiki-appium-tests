@@ -1,12 +1,14 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from appium.webdriver.webdriver import WebDriver
+import logging
 
 
 class Page:
     def __init__(self, driver: WebDriver):
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 10)
+        self.logger = logging.getLogger(__name__)
 
     def click_button(self, button_locator: tuple):
         button = self.wait.until(EC.element_to_be_clickable(button_locator))

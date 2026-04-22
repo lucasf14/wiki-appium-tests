@@ -31,12 +31,26 @@ class ExplorePage(Page):
             "android.widget.TextView",
         )
 
-    def print_results(self):
-        search_results = self.wait.until(
-            EC.visibility_of_element_located(self.search_results)
-        )
+    def get_search_results(
+        self, parent_locator: tuple, child_locator: tuple = None
+    ) -> list:
+        search_results = []
 
-        result_elements = search_results.find_elements(*self.result_elements)
+        if child_locator is not None:
+            result_elements = self.find_inner_elements(parent_locator, child_locator)
+        else:
+            result_elements = self.find_elements(*parent_locator)
 
-        for element in result_elements:
-            print(f"TEXT: {element.text.strip()}")
+        for i in range(0, len(result_elements), 2):
+            payload = {
+                "title": result_elements[i].text.strip(),
+                "description": (
+                    result_elements[i + 1].text.strip()
+                    if len(result_elements) > 1
+                    else ""
+                ),
+                "element": result_elements[i],
+            }
+            search_results.append(payload)
+            self.logger.info(f"Added search result [{len(search_results)}]: {payload}")
+        return search_results
