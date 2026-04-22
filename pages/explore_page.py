@@ -35,11 +35,7 @@ class ExplorePage(Page):
         self, parent_locator: tuple, child_locator: tuple = None
     ) -> list:
         search_results = []
-
-        if child_locator is not None:
-            result_elements = self.find_inner_elements(parent_locator, child_locator)
-        else:
-            result_elements = self.find_elements(*parent_locator)
+        result_elements = self.get_elements(parent_locator, child_locator)
 
         for i in range(0, len(result_elements), 2):
             payload = {
