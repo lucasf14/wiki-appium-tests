@@ -1,8 +1,8 @@
-from pages.main_page import MainPage
+from pages.explore_page import ExplorePage
 
 
 def test_search(appium_driver) -> None:
-    main_page = MainPage(appium_driver)
+    main_page = ExplorePage(appium_driver)
 
     main_page.click_button(main_page.skip_button)
 

@@ -1,12 +1,11 @@
 from appium.webdriver.common.appiumby import AppiumBy
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
+from pages.page import Page
 
 
-class MainPage:
+class ExplorePage(Page):
     def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(self.driver, 10)
+        super().__init__(driver)
 
         self.skip_button = (
             AppiumBy.ID,
@@ -31,14 +30,6 @@ class MainPage:
             AppiumBy.CLASS_NAME,
             "android.widget.TextView",
         )
-
-    def click_button(self, button_locator):
-        button = self.wait.until(EC.element_to_be_clickable(button_locator))
-        button.click()
-
-    def fill_input(self, input_locator, text):
-        input_element = self.wait.until(EC.visibility_of_element_located(input_locator))
-        input_element.send_keys(text)
 
     def print_results(self):
         search_results = self.wait.until(
