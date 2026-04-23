@@ -10,22 +10,22 @@ class ArticlePage(Page):
             AppiumBy.ID,
             "org.wikipedia:id/closeButton",
         )
-        self.expand_table = (
+        self.expand_table_button = (
             AppiumBy.XPATH,
-            "//android.widget.TextView[@text='Quick facts']",
+            "//android.view.View[@text='Quick facts']",
         )
 
-        self.table = (
+        self.quick_facts_container = (
             AppiumBy.XPATH,
             "//android.widget.GridView",
         )
 
-        self.row = (
+        self.quick_facts_elements = (
             AppiumBy.XPATH,
             "//android.view.View",
         )
 
-        self.label_value = (
+        self.row_value = (
             AppiumBy.XPATH,
             "//android.view.View[@text!='']",
         )
@@ -35,20 +35,25 @@ class ArticlePage(Page):
             "//android.view.View[@text='Government']",
         )
 
+        self.back_button = (
+            AppiumBy.ACCESSIBILITY_ID,
+            "Navigate up",
+        )
+
     def get_quick_facts(
         self,
-        table_locator: tuple,
-        row_locator: tuple = None,
-        fact_locator: tuple = None,
+        parent_locator: tuple,
+        child_locator: tuple = None,
+        grandchild_locator: tuple = None,
     ) -> list:
         quick_facts = {}
-        quick_facts_elements = self.get_elements(table_locator, row_locator)
+        quick_facts_elements = self.get_elements(parent_locator, child_locator)
 
         for element in quick_facts_elements:
-            fact_elements = element.find_elements(*fact_locator)
-            if len(fact_elements) > 1:
-                label = fact_elements[0].text.strip().lower()
-                value = fact_elements[1].text.strip().lower()
+            row_elements = element.find_elements(*grandchild_locator)
+            if len(row_elements) > 1:
+                label = row_elements[0].text.strip().lower()
+                value = row_elements[1].text.strip().lower()
                 quick_facts[label] = value
                 self.logger.info(
                     f"Added quick fact [{len(quick_facts)}]: {label}: {value}"

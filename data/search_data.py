@@ -9,3 +9,5 @@ AZORES_QUICK_FACTS = {
     "Official languages": "Portuguese",
     "Government": "Autonomous Region",
 }
+
+SEARCH_WORDS = ["Azores", "Portugal", "Coimbra"]

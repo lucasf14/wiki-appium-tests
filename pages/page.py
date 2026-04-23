@@ -1,6 +1,7 @@
+from appium.webdriver.common.appiumby import AppiumBy
+from appium.webdriver.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from appium.webdriver.webdriver import WebDriver
 import logging
 
 
@@ -10,14 +11,31 @@ class Page:
         self.wait = WebDriverWait(self.driver, 10)
         self.logger = logging.getLogger(__name__)
 
-    def click_button(self, button_locator: tuple):
-        button = self.wait.until(EC.element_to_be_clickable(button_locator))
-        self.logger.info(f"Clicked {button_locator} element")
-        button.click()
+        self.clickable_result_elements = (
+            AppiumBy.XPATH,
+            "//android.view.View[@clickable='true']",
+        )
 
-    def fill_input(self, input_locator: tuple, text: str):
+        self.all_result_elements = (
+            AppiumBy.XPATH,
+            "//android.view.View",
+        )
+
+    def click_button(self, button_locator: tuple, retries: int = 5) -> None:
+        for i in range(retries):
+            try:
+                button = self.wait.until(EC.element_to_be_clickable(button_locator))
+                self.logger.info(f"Clicked {button_locator} element after {i} tries")
+                button.click()
+                return
+            except:
+                self.logger.info("Button not found. Retrying")
+        raise Exception(f"Failed to click button after {retries} attempts.")
+
+    def fill_input(self, input_locator: tuple, text: str) -> None:
         input_element = self.wait.until(EC.visibility_of_element_located(input_locator))
         self.logger.info(f"Filled input with text: {text}")
+        input_element.clear()
         input_element.send_keys(text)
 
     def find_inner_elements(self, parent_locator: tuple, child_locator: tuple) -> list:

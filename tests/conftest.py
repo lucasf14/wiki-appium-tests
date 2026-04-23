@@ -15,6 +15,7 @@ def appium_driver():
         appActivity=".main.MainActivity",
         language="en",
         locale="US",
+        # noReset=True,
     )
 
     driver = webdriver.Remote(

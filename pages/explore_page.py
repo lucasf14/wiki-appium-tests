@@ -1,5 +1,4 @@
 from appium.webdriver.common.appiumby import AppiumBy
-from selenium.webdriver.support import expected_conditions as EC
 from pages.page import Page
 
 
@@ -11,6 +10,7 @@ class ExplorePage(Page):
             AppiumBy.ID,
             "org.wikipedia:id/fragment_onboarding_skip_button",
         )
+
         self.search_container = (
             AppiumBy.ID,
             "org.wikipedia:id/search_container",
@@ -21,32 +21,58 @@ class ExplorePage(Page):
             "org.wikipedia:id/search_src_text",
         )
 
-        self.search_results = (
+        self.search_button = (
+            AppiumBy.ID,
+            "org.wikipedia:id/nav_tab_search",
+        )
+
+        self.search_results_container = (
             AppiumBy.ID,
             "org.wikipedia:id/fragment_search_results",
         )
 
-        self.result_elements = (
-            AppiumBy.CLASS_NAME,
-            "android.widget.TextView",
+        self.row_value = (
+            AppiumBy.XPATH,
+            "//android.widget.TextView[@text!='']",
+        )
+
+        self.history_container = (
+            AppiumBy.ID,
+            "org.wikipedia:id/history_list",
+        )
+
+        self.history_elements = (
+            AppiumBy.ID,
+            "org.wikipedia:id/page_list_item_container",
         )
 
     def get_search_results(
-        self, parent_locator: tuple, child_locator: tuple = None
+        self,
+        parent_locator: tuple,
+        child_locator: tuple = None,
+        grandchild_locator: tuple = None,
     ) -> list:
+        titles = set()
         search_results = []
-        result_elements = self.get_elements(parent_locator, child_locator)
+        search_results_elements = self.get_elements(parent_locator, child_locator)
 
-        for i in range(0, len(result_elements), 2):
-            payload = {
-                "title": result_elements[i].text.strip(),
-                "description": (
-                    result_elements[i + 1].text.strip()
-                    if len(result_elements) > 1
-                    else ""
-                ),
-                "element": result_elements[i],
-            }
-            search_results.append(payload)
-            self.logger.info(f"Added search result [{len(search_results)}]: {payload}")
+        for element in search_results_elements:
+            row_elements = element.find_elements(*grandchild_locator)
+            if len(row_elements) >= 1:
+                title = row_elements[0].text.strip()
+                description = (
+                    row_elements[1].text.strip() if len(row_elements) > 1 else ""
+                )
+                payload = {
+                    "title": title,
+                    "description": description,
+                    "element": row_elements[0],
+                }
+                if title not in titles:
+                    search_results.append(payload)
+                    titles.add(title)
+                    self.logger.info(
+                        f"Added search result [{len(search_results)}]: {payload}"
+                    )
+
         return search_results

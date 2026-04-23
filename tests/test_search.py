@@ -16,7 +16,9 @@ def test_unsuccessful_article_search(appium_driver) -> None:
     explore_page.fill_input(explore_page.search_input, SEARCH_WORD_INVALID)
 
     search_results = explore_page.get_search_results(
-        explore_page.search_results, explore_page.result_elements
+        explore_page.search_results_container,
+        explore_page.all_result_elements,
+        explore_page.row_value,
     )
 
     assert len(search_results) == 1
@@ -34,7 +36,9 @@ def test_successful_article_search(appium_driver) -> None:
     explore_page.fill_input(explore_page.search_input, SEARCH_WORD_VALID)
 
     search_results = explore_page.get_search_results(
-        explore_page.search_results, explore_page.result_elements
+        explore_page.search_results_container,
+        explore_page.clickable_result_elements,
+        explore_page.row_value,
     )
 
     assert len(search_results) >= 1
@@ -49,13 +53,13 @@ def test_successful_article_search(appium_driver) -> None:
             break
 
     article_page.click_button(article_page.close_button)
-    article_page.click_button(article_page.expand_table)
+    article_page.click_button(article_page.expand_table_button)
     article_page.scroll_and_find(article_page.government)
 
     quick_facts = article_page.get_quick_facts(
-        article_page.table,
-        article_page.row,
-        article_page.label_value,
+        article_page.quick_facts_container,
+        article_page.quick_facts_elements,
+        article_page.row_value,
     )
 
     for label, value in AZORES_QUICK_FACTS.items():
