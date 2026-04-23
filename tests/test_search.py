@@ -54,12 +54,9 @@ def test_successful_article_search(appium_driver) -> None:
 
     article_page.click_button(article_page.close_button)
     article_page.click_button(article_page.expand_table_button)
-    article_page.scroll_and_find(article_page.government)
 
     quick_facts = article_page.get_quick_facts(
-        article_page.quick_facts_container,
-        article_page.quick_facts_elements,
-        article_page.row_value,
+        article_page.close_qf_button,
     )
 
     for label, value in AZORES_QUICK_FACTS.items():

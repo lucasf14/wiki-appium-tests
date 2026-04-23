@@ -30,9 +30,9 @@ class ArticlePage(Page):
             "//android.view.View[@text!='']",
         )
 
-        self.government = (
+        self.close_qf_button = (
             AppiumBy.XPATH,
-            "//android.view.View[@text='Government']",
+            "//android.widget.TextView[@text='Close']",
         )
 
         self.back_button = (
@@ -41,6 +41,38 @@ class ArticlePage(Page):
         )
 
     def get_quick_facts(
+        self,
+        target_locator: tuple,
+        max_scrolls: int = 10,
+    ) -> dict:
+        labels = set()
+        quick_facts = {}
+
+        for _ in range(max_scrolls):
+            parsed_quick_facts = self.parse_quick_facts(
+                self.quick_facts_container,
+                self.quick_facts_elements,
+                self.row_value,
+            )
+
+            for label, value in parsed_quick_facts.items():
+                if label not in labels:
+                    quick_facts[label] = value
+                    labels.add(label)
+                    self.logger.info(
+                        f"Added quick fact [{len(quick_facts)}]: {label}: {value}"
+                    )
+
+            self.scroll("down")
+
+            if self.driver.find_elements(*target_locator):
+                self.logger.info("Target element found. Stopping scroll")
+                break
+
+            self.logger.info("Target element not found yet. Scrolling")
+        return quick_facts
+
+    def parse_quick_facts(
         self,
         parent_locator: tuple,
         child_locator: tuple = None,
@@ -55,8 +87,6 @@ class ArticlePage(Page):
                 label = row_elements[0].text.strip().lower()
                 value = row_elements[1].text.strip().lower()
                 quick_facts[label] = value
-                self.logger.info(
-                    f"Added quick fact [{len(quick_facts)}]: {label}: {value}"
-                )
+                self.logger.info(f"Parsed quick fact: {label}: {value}")
 
         return quick_facts

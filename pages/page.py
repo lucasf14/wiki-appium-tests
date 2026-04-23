@@ -72,3 +72,16 @@ class Page:
                     },
                 )
         raise Exception(f"Element not found after {max_scrolls} tries.")
+
+    def scroll(self, direction: str = "down"):
+        self.driver.execute_script(
+            "mobile: scrollGesture",
+            {
+                "left": 100,
+                "top": 100,
+                "width": 1000,
+                "height": 1000,
+                "direction": direction,
+                "percent": 1.0,
+            },
+        )
