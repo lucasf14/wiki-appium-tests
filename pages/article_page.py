@@ -66,7 +66,7 @@ class ArticlePage(Page):
 
             self.scroll("down")
 
-            if self.driver.find_element(*target_locator):
+            if self.driver.find_elements(*target_locator):
                 self.logger.info("Target element found. Stopping scroll")
                 break
 
