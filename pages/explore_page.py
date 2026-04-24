@@ -78,3 +78,16 @@ class ExplorePage(Page):
                     )
 
         return search_results
+
+    def open_article(
+        self,
+        article_title: str,
+        search_results: list,
+    ):
+        # Find matching article and open it
+        for result in search_results:
+            if article_title.lower() == result["title"].lower():
+                self.click_button(result["element"])
+                return
+
+        raise Exception(f"Article not found for search term: {article_title}")

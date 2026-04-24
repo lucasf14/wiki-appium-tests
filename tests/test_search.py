@@ -52,10 +52,7 @@ def test_successful_article_search(appium_driver) -> None:
     )
 
     # Open the article that matches the search word
-    for result in search_results:
-        if SEARCH_WORD_VALID.lower() == result["title"].lower():
-            explore_page.click_button(result["element"])
-            break
+    explore_page.open_article(SEARCH_WORD_VALID.lower(), search_results)
 
     # Assumption: Close article only on first iteration (app fresh state handling)
     article_page.click_button(article_page.close_button)

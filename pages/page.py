@@ -32,20 +32,37 @@ class Page:
                 self.logger.info("Button not found. Retrying")
         raise Exception(f"Failed to click button after {retries} attempts.")
 
-    def fill_input(self, input_locator: tuple, text: str) -> None:
-        input_element = self.wait.until(EC.visibility_of_element_located(input_locator))
-        self.logger.info(f"Filled input with text: {text}")
-        input_element.clear()
-        input_element.send_keys(text)
+    def fill_input(self, input_locator: tuple, text: str, retries: int = 5) -> None:
+        for i in range(retries):
+            try:
+                input_element = self.wait.until(
+                    EC.visibility_of_element_located(input_locator)
+                )
+                self.logger.info(f"Filled input with text after {i} tries: {text}")
+                input_element.clear()
+                input_element.send_keys(text)
+                return
+            except:
+                self.logger.info("Field not found. Retrying")
+        raise Exception(f"Failed to fill input field after {retries} attempts.")
 
-    def find_inner_elements(self, parent_locator: tuple, child_locator: tuple) -> list:
-        parent_element = self.wait.until(
-            EC.visibility_of_element_located(parent_locator)
-        )
+    def find_inner_elements(
+        self, parent_locator: tuple, child_locator: tuple, retries: int = 5
+    ) -> list:
+        for i in range(retries):
+            try:
+                parent_element = self.wait.until(
+                    EC.visibility_of_element_located(parent_locator)
+                )
 
-        child_element = parent_element.find_elements(*child_locator)
-        self.logger.info(f"Found {len(child_element)} inner elements")
-        return child_element
+                child_element = parent_element.find_elements(*child_locator)
+                self.logger.info(
+                    f"Found {len(child_element)} inner elements after {i} tries"
+                )
+                return child_element
+            except:
+                self.logger.info("Inner elements not found. Retrying")
+        raise Exception(f"Failed to find inner elements {retries} attempts.")
 
     def get_elements(self, parent_locator: tuple, child_locator: tuple = None) -> list:
         if child_locator is not None:

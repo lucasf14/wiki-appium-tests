@@ -22,11 +22,9 @@ def test_history(appium_driver) -> None:
             explore_page.clickable_result_elements,
             explore_page.row_value,
         )
-        # Find matching article and open it
-        for result in search_results:
-            if search_word.lower() == result["title"].lower():
-                explore_page.click_button(result["element"])
-                break
+
+        explore_page.open_article(search_word.lower(), search_results)
+
         # Assumption: Close article only on first iteration (app fresh state handling)
         if i == 0:
             article_page.click_button(article_page.close_button)
@@ -39,6 +37,7 @@ def test_history(appium_driver) -> None:
         explore_page.history_elements,
         explore_page.row_value,
     )
+
     # Extract titles from history results and assert that each search word is present in the titles
     titles = [result["title"].lower() for result in history_results]
     for search_word in SEARCH_WORDS:
