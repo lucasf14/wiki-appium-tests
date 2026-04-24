@@ -56,6 +56,7 @@ class ArticlePage(Page):
             )
 
             for label, value in parsed_quick_facts.items():
+                # Only add new quick facts to the dictionary to avoid duplicates
                 if label not in labels:
                     quick_facts[label] = value
                     labels.add(label)
@@ -65,7 +66,7 @@ class ArticlePage(Page):
 
             self.scroll("down")
 
-            if self.driver.find_elements(*target_locator):
+            if self.driver.find_element(*target_locator):
                 self.logger.info("Target element found. Stopping scroll")
                 break
 

@@ -68,6 +68,8 @@ class ExplorePage(Page):
                     "description": description,
                     "element": row_elements[0],
                 }
+
+                # Only add new search results to the list to avoid duplicates
                 if title not in titles:
                     search_results.append(payload)
                     titles.add(title)

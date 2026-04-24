@@ -9,8 +9,11 @@ def test_history(appium_driver) -> None:
     explore_page = ExplorePage(appium_driver)
     article_page = ArticlePage(appium_driver)
 
+    # Assumption: Skip button appears when the app is launched (app fresh state handling)
     explore_page.click_button(explore_page.skip_button)
     explore_page.click_button(explore_page.search_container)
+
+    # Iterate through search words, open articles, and finally return to search page to validate history
     for i, search_word in enumerate(SEARCH_WORDS):
         explore_page.fill_input(explore_page.search_input, search_word)
 
@@ -19,12 +22,12 @@ def test_history(appium_driver) -> None:
             explore_page.clickable_result_elements,
             explore_page.row_value,
         )
-
+        # Find matching article and open it
         for result in search_results:
             if search_word.lower() == result["title"].lower():
                 explore_page.click_button(result["element"])
                 break
-
+        # Assumption: Close article only on first iteration (app fresh state handling)
         if i == 0:
             article_page.click_button(article_page.close_button)
         article_page.click_button(article_page.back_button)
@@ -36,7 +39,7 @@ def test_history(appium_driver) -> None:
         explore_page.history_elements,
         explore_page.row_value,
     )
-
+    # Extract titles from history results and assert that each search word is present in the titles
     titles = [result["title"].lower() for result in history_results]
     for search_word in SEARCH_WORDS:
         assert search_word.lower() in titles
