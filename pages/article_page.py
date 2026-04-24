@@ -1,9 +1,13 @@
 from appium.webdriver.common.appiumby import AppiumBy
+from appium.webdriver.webdriver import WebDriver
 from pages.page import Page
 
 
 class ArticlePage(Page):
-    def __init__(self, driver):
+    def __init__(
+        self,
+        driver: WebDriver,
+    ):
         super().__init__(driver)
 
         self.close_button = (

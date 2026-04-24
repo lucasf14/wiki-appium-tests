@@ -5,7 +5,9 @@ from data.search_data import (
 )
 
 
-def test_history(appium_driver) -> None:
+def test_history(
+    appium_driver,
+) -> None:
     explore_page = ExplorePage(appium_driver)
     article_page = ArticlePage(appium_driver)
 

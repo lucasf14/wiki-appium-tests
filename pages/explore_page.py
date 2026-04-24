@@ -1,9 +1,13 @@
 from appium.webdriver.common.appiumby import AppiumBy
+from appium.webdriver.webdriver import WebDriver
 from pages.page import Page
 
 
 class ExplorePage(Page):
-    def __init__(self, driver):
+    def __init__(
+        self,
+        driver: WebDriver,
+    ):
         super().__init__(driver)
 
         self.skip_button = (
@@ -83,7 +87,7 @@ class ExplorePage(Page):
         self,
         article_title: str,
         search_results: list,
-    ):
+    ) -> None:
         # Find matching article and open it
         for result in search_results:
             if article_title.lower() == result["title"].lower():

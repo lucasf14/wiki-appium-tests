@@ -8,7 +8,9 @@ from data.search_data import (
 )
 
 
-def test_unsuccessful_article_search(appium_driver) -> None:
+def test_unsuccessful_article_search(
+    appium_driver,
+) -> None:
     explore_page = ExplorePage(appium_driver)
 
     # Assumption: Skip button appears when the app is launched (app fresh state handling)
@@ -29,7 +31,9 @@ def test_unsuccessful_article_search(appium_driver) -> None:
     )
 
 
-def test_successful_article_search(appium_driver) -> None:
+def test_successful_article_search(
+    appium_driver,
+) -> None:
     explore_page = ExplorePage(appium_driver)
     article_page = ArticlePage(appium_driver)
 

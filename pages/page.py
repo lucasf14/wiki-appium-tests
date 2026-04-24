@@ -6,7 +6,10 @@ import logging
 
 
 class Page:
-    def __init__(self, driver: WebDriver):
+    def __init__(
+        self,
+        driver: WebDriver,
+    ):
         self.driver = driver
         self.wait = WebDriverWait(self.driver, 10)
         self.logger = logging.getLogger(__name__)
@@ -21,7 +24,11 @@ class Page:
             "//android.view.View",
         )
 
-    def click_button(self, button_locator: tuple, retries: int = 5) -> None:
+    def click_button(
+        self,
+        button_locator: tuple,
+        retries: int = 5,
+    ) -> None:
         for i in range(retries):
             try:
                 button = self.wait.until(EC.element_to_be_clickable(button_locator))
@@ -32,7 +39,12 @@ class Page:
                 self.logger.info("Button not found. Retrying")
         raise Exception(f"Failed to click button after {retries} attempts.")
 
-    def fill_input(self, input_locator: tuple, text: str, retries: int = 5) -> None:
+    def fill_input(
+        self,
+        input_locator: tuple,
+        text: str,
+        retries: int = 5,
+    ) -> None:
         for i in range(retries):
             try:
                 input_element = self.wait.until(
@@ -47,7 +59,10 @@ class Page:
         raise Exception(f"Failed to fill input field after {retries} attempts.")
 
     def find_inner_elements(
-        self, parent_locator: tuple, child_locator: tuple, retries: int = 5
+        self,
+        parent_locator: tuple,
+        child_locator: tuple,
+        retries: int = 5,
     ) -> list:
         for i in range(retries):
             try:
@@ -64,12 +79,20 @@ class Page:
                 self.logger.info("Inner elements not found. Retrying")
         raise Exception(f"Failed to find inner elements {retries} attempts.")
 
-    def get_elements(self, parent_locator: tuple, child_locator: tuple = None) -> list:
+    def get_elements(
+        self,
+        parent_locator: tuple,
+        child_locator: tuple = None,
+    ) -> list:
         if child_locator is not None:
             return self.find_inner_elements(parent_locator, child_locator)
         return self.driver.find_elements(*parent_locator)
 
-    def scroll_and_find(self, element_locator: tuple, max_scrolls: int = 10):
+    def scroll_and_find(
+        self,
+        element_locator: tuple,
+        max_scrolls: int = 10,
+    ) -> None:
         for i in range(max_scrolls):
             try:
                 element = self.driver.find_element(*element_locator)
@@ -90,7 +113,10 @@ class Page:
                 )
         raise Exception(f"Element not found after {max_scrolls} tries.")
 
-    def scroll(self, direction: str = "down"):
+    def scroll(
+        self,
+        direction: str = "down",
+    ) -> None:
         self.driver.execute_script(
             "mobile: scrollGesture",
             {
